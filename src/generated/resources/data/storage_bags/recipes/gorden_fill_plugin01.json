@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:gorden_fill_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:gold_block"
+    },
+    "D": {
+      "item": "minecraft:gold_ingot"
+    },
+    "f": {
+      "item": "storage_bags:plugin/iron_fill_plugin"
+    }
+  },
+  "pattern": [
+    "DDD",
+    "#f#",
+    "DDD"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/gorden_fill_plugin"
+  },
+  "show_notification": true
+}

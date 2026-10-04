@@ -1,0 +1,13 @@
+{
+  "values": [
+    "storage_bags:storage_bag/cutting_tree_storage_bag",
+    "storage_bags:storage_bag/mining_ore_storage_bag",
+    "storage_bags:storage_bag/plant_storage_bag",
+    "storage_bags:storage_bag/industry_storage_bag",
+    "storage_bags:storage_bag/fishing_storage_bag",
+    "storage_bags:storage_bag/buttle_storage_bag",
+    "storage_bags:storage_bag/building_storage_bag",
+    "storage_bags:storage_bag/husbandry_storage_bag",
+    "storage_bags:storage_bag/custom_storage_bag"
+  ]
+}

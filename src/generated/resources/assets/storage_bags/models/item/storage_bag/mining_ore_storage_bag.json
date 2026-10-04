@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "storage_bags:item/storage_bag/mining_ore_storage_bag"
+  }
+}

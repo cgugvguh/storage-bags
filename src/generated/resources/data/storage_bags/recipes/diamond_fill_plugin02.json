@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:diamond_fill_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:diamond"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "f": {
+      "item": "minecraft:emerald_block"
+    }
+  },
+  "pattern": [
+    "###",
+    "DfD",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/diamond_fill_plugin"
+  },
+  "show_notification": true
+}

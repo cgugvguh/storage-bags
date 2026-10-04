@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:infinite_fill_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:netherite_block"
+    },
+    "f": {
+      "item": "minecraft:dragon_egg"
+    }
+  },
+  "pattern": [
+    "###",
+    "#f#",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/infinite_fill_plugin"
+  },
+  "show_notification": true
+}

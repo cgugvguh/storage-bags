@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:gorden_expand_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:gold_block"
+    },
+    "f": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "###",
+    "#f#",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/gorden_expand_plugin"
+  },
+  "show_notification": true
+}

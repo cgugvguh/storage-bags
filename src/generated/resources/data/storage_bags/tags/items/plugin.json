@@ -1,0 +1,14 @@
+{
+  "values": [
+    "storage_bags:plugin/iron_expand_plugin",
+    "storage_bags:plugin/gorden_expand_plugin",
+    "storage_bags:plugin/diamond_expand_plugin",
+    "storage_bags:plugin/netherite_expand_plugin",
+    "storage_bags:plugin/infinite_expand_plugin",
+    "storage_bags:plugin/iron_fill_plugin",
+    "storage_bags:plugin/gorden_fill_plugin",
+    "storage_bags:plugin/diamond_fill_plugin",
+    "storage_bags:plugin/netherite_fill_plugin",
+    "storage_bags:plugin/infinite_fill_plugin"
+  ]
+}

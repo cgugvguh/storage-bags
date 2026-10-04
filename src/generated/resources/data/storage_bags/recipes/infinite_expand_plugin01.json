@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:infinite_expand_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:netherite_block"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "f": {
+      "item": "storage_bags:plugin/netherite_expand_plugin"
+    }
+  },
+  "pattern": [
+    "###",
+    "DfD",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/infinite_expand_plugin"
+  },
+  "show_notification": true
+}

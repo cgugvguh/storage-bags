@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:leather"
+    },
+    "f": {
+      "item": "minecraft:iron_hoe"
+    }
+  },
+  "pattern": [
+    " # ",
+    "#f#",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:storage_bag/plant_storage_bag"
+  },
+  "show_notification": true
+}

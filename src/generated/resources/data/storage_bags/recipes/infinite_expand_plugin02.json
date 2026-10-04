@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:infinite_expand_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:netherite_block"
+    },
+    "f": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "###",
+    "#f#",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/infinite_expand_plugin"
+  },
+  "show_notification": true
+}

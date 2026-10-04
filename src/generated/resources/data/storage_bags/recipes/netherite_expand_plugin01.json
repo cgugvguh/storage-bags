@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:netherite_expand_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:chest"
+    },
+    "D": {
+      "item": "storage_bags:plugin/diamond_expand_plugin"
+    },
+    "f": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    "###",
+    "D#f",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/netherite_expand_plugin"
+  },
+  "show_notification": true
+}

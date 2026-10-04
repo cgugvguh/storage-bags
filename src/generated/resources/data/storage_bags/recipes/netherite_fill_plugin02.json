@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:netherite_fill_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:emerald"
+    },
+    "D": {
+      "item": "storage_bags:plugin/diamond_fill_plugin"
+    },
+    "f": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    "###",
+    "f#D",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/netherite_fill_plugin"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:diamond_fill_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:diamond"
+    },
+    "f": {
+      "item": "storage_bags:plugin/gorden_expand_plugin"
+    }
+  },
+  "pattern": [
+    "###",
+    "#f#",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/diamond_fill_plugin"
+  },
+  "show_notification": true
+}

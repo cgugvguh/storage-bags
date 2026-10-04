@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "storage_bags:iron_expand_plugin",
+  "key": {
+    "#": {
+      "item": "minecraft:iron_block"
+    },
+    "f": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "###",
+    "#f#",
+    "###"
+  ],
+  "result": {
+    "item": "storage_bags:plugin/iron_expand_plugin"
+  },
+  "show_notification": true
+}

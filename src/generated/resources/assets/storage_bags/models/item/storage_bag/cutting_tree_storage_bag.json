@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "storage_bags:item/storage_bag/cutting_tree_storage_bag"
+  }
+}
