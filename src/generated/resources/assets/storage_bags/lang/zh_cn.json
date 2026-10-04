@@ -27,5 +27,6 @@
   "item.storage_bags.storage_bag.industry_storage_bag": "红石物品储物袋",
   "item.storage_bags.storage_bag.mining_ore_storage_bag": "挖矿储物袋",
   "item.storage_bags.storage_bag.plant_storage_bag": "种田储物袋",
+  "itemGroup.storage_bags": "储物袋",
   "stat.portable_tools_kit.use_storage_bag": "使用储物袋"
 }

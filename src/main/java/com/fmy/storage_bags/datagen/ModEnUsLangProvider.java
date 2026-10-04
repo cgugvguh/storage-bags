@@ -1,6 +1,5 @@
 package com.fmy.storage_bags.datagen;
 
-import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.StorageBags;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.data.PackOutput;
@@ -53,5 +52,7 @@ public class ModEnUsLangProvider extends LanguageProvider {
         add("container.building_storage_bag","Building Storage Bag");
         add("container.husbandry_storage_bag","Husbandry Storage Bag");
         add("container.custom_storage_bag","Custom Storage Bag");
+
+        add("itemGroup.storage_bags", "Storage Bags");
     }
 }

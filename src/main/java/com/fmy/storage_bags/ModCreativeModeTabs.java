@@ -1,6 +1,5 @@
 package com.fmy.storage_bags;
 
-import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -33,13 +32,13 @@ public class ModCreativeModeTabs {
                                 pOutput.accept(ModItems.DIAMOND_FINDER.get());
 
                             }).build());*/
-    public static final RegistryObject<CreativeModeTab> USEFUL_TOOLS =
+    public static final RegistryObject<CreativeModeTab> STORAGE_BAGS =
             //调用注册表的方法注册一个物品栏
-            CREATIVE_MODE_TABS.register("useful_tools",
+            CREATIVE_MODE_TABS.register("storage_bags",
                     () -> CreativeModeTab.builder()
                             .icon(() -> new ItemStack(ModItems.CUTTING_TREE_STORAGE_BAG.get()))
                             //物品栏图标文件,物品数据存在了ItemStack里面,包括材质,这里获取了Ice ether的数据作为图标
-                            .title(Component.translatable("itemGroup.useful_tools"))
+                            .title(Component.translatable("itemGroup.storage_bags"))
                             //用来翻译,系统在lang寻找对应语言的翻译
                             .displayItems((pParameters, pOutput) -> {
                                 //物品栏展示的物品

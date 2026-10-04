@@ -18,7 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 宛
@@ -153,7 +155,9 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
                     && this.menu.clickMenuButton(this.minecraft.player, l)) {
                 Minecraft.getInstance().getSoundManager()
                         .play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
-                this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, l);
+                if (this.minecraft.gameMode != null) {
+                    this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, l);
+                }
                 return true;
             }
         }
@@ -234,7 +238,7 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
         int amount = 0;
 
         // 解析：空串或非数字都当作 0
-        if (text != null && !text.isEmpty()) {
+        if (!text.isEmpty()) {
             try {
                 amount = Integer.parseInt(text);
             } catch (NumberFormatException e) {

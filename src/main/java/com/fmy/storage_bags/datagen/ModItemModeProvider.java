@@ -46,7 +46,10 @@ public class ModItemModeProvider extends ItemModelProvider {
     }
     public void basicItem(RegistryObject<Item> item)
     {
-        String path = item.getId().getPath();
+        String path = null;
+        if (item.getId() != null) {
+            path = item.getId().getPath();
+        }
         withExistingParent("item/" + path, mcLoc("item/generated"))
                 .texture("layer0", modLoc("item/" + path));
     }

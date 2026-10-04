@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
  * @version 1.0
  */
 public class ExpandPlugin extends Item {
-    private Tier tier;
+    private final Tier tier;
     public ExpandPlugin(Tier pTier, Properties pProperties) {
         super(pProperties);
         this.tier = pTier;

@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
  * @version 1.0
  */
 public class FillPlugin extends Item {
-    private Tier tier;
+    private final Tier tier;
     public FillPlugin(Tier tier, Properties pProperties) {
         super(pProperties);
         this.tier = tier;

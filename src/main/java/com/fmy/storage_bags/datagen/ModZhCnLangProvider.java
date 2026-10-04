@@ -1,6 +1,5 @@
 package com.fmy.storage_bags.datagen;
 
-import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.StorageBags;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.data.PackOutput;
@@ -52,6 +51,8 @@ public class ModZhCnLangProvider extends LanguageProvider {
         add("container.building_storage_bag","建筑储物袋");
         add("container.husbandry_storage_bag","养殖储物袋");
         add("container.custom_storage_bag","自定义储物袋");
+
+        add("itemGroup.storage_bags", "储物袋");
 
         /*add(ModItems.POWDERED_ROSE_INGOT.get(),"粉霞锭");
         add("itemGroup.funny_items", "有趣小玩意");*/

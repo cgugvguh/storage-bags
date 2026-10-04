@@ -27,5 +27,6 @@
   "item.storage_bags.storage_bag.industry_storage_bag": "Redstone Storage Bag",
   "item.storage_bags.storage_bag.mining_ore_storage_bag": "Ore Storage Bag",
   "item.storage_bags.storage_bag.plant_storage_bag": "Farming Storage Bag",
+  "itemGroup.storage_bags": "Storage Bags",
   "stat.portable_tools_kit.use_storage_bag": "Used Storage Bag"
 }
