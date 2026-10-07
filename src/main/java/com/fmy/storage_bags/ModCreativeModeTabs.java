@@ -1,6 +1,5 @@
 package com.fmy.storage_bags;
 
-import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

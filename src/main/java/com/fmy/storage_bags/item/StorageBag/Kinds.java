@@ -1,6 +1,7 @@
 package com.fmy.storage_bags.item.StorageBag;
 
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;

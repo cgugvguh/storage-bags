@@ -3,9 +3,7 @@ package com.fmy.storage_bags.menu;
 import com.fmy.storage_bags.Internet.ModNetwork;
 import com.fmy.storage_bags.Internet.StorageActionPacket;
 import com.fmy.storage_bags.Internet.StoreAllPacket;
-import com.fmy.storage_bags.item.StorageBag.StorageUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -16,13 +14,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 宛

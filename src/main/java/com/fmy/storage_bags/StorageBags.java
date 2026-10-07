@@ -1,7 +1,6 @@
 package com.fmy.storage_bags;
 
 import com.fmy.storage_bags.Block.ModBlocks;
-
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import com.fmy.storage_bags.menu.ModMenuTypes;
 import com.fmy.storage_bags.stats.ModStats;

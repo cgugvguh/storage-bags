@@ -1,20 +1,17 @@
 package com.fmy.storage_bags.datagen;
 
-import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.StorageBags;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
-import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**

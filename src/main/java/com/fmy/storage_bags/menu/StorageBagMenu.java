@@ -1,6 +1,6 @@
 package com.fmy.storage_bags.menu;
+
 import com.fmy.storage_bags.Internet.ModNetwork;
-import com.fmy.storage_bags.Internet.StorageActionPacket;
 import com.fmy.storage_bags.Internet.StorageSyncPacket;
 import com.fmy.storage_bags.item.StorageBag.Storage;
 import com.fmy.storage_bags.item.StorageBag.StorageBag;
@@ -17,12 +17,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * @author 宛

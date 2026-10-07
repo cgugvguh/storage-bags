@@ -1,14 +1,12 @@
 package com.fmy.storage_bags.item.StorageBag;
 
 import com.fmy.storage_bags.item.ModItem.ModTiers;
-import com.fmy.storage_bags.menu.StorageBagMenu;
 import com.fmy.storage_bags.tag.ModItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 
 import java.util.HashMap;

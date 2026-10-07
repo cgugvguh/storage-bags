@@ -1,6 +1,5 @@
 package com.fmy.storage_bags.Internet;
 
-import com.fmy.storage_bags.item.StorageBag.StorageUtil;
 import com.fmy.storage_bags.menu.StorageBagMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
