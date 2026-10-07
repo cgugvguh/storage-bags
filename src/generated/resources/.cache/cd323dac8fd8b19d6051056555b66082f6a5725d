@@ -1,4 +1,4 @@
-// 1.20.1	2026-10-03T11:47:56.216352	Item Models: storage_bags
+// 1.20.1	2026-10-06T15:59:09.1385684	Item Models: storage_bags
 26424b3a09725e229de5a0fd73029e6a1ee42d63 assets/storage_bags/models/item/plugin/diamond_expand_plugin.json
 668f7c16648e79490e020501d7d13736315da4b0 assets/storage_bags/models/item/plugin/diamond_fill_plugin.json
 daf3ac546d3f28fd72daa7fe7fc4152aeb4fda1f assets/storage_bags/models/item/plugin/gorden_expand_plugin.json
@@ -9,8 +9,8 @@ b22abae462d30b9b8b7799b57741e92ae44b0681 assets/storage_bags/models/item/plugin/
 cb5b0ae57314914e45d926a382e6e4807a9d9389 assets/storage_bags/models/item/plugin/iron_fill_plugin.json
 108409d9b7599206a0e207e16274dbd25ff16ecc assets/storage_bags/models/item/plugin/netherite_expand_plugin.json
 122553e6565e9dfd534349790719d285af0289cc assets/storage_bags/models/item/plugin/netherite_fill_plugin.json
+f375055fdbda0f9652c4953484f871aa39e4dfb5 assets/storage_bags/models/item/storage_bag/battle_storage_bag.json
 235a877898459d7563813b4c7952c56dcef472d1 assets/storage_bags/models/item/storage_bag/building_storage_bag.json
-3730506ae6a340dfbda1dcc2a5eb84e15edc4ba6 assets/storage_bags/models/item/storage_bag/buttle_storage_bag.json
 4301dbf17ed9017fdb21f81eb363dbeb70a494b7 assets/storage_bags/models/item/storage_bag/custom_storage_bag.json
 afb9d5feec3a4ee505f7734b0ea87e6a8c14160a assets/storage_bags/models/item/storage_bag/cutting_tree_storage_bag.json
 8f62683d7c83acab6882c2183acd0aca12b9768a assets/storage_bags/models/item/storage_bag/fishing_storage_bag.json

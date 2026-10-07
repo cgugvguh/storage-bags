@@ -1,6 +1,7 @@
 package com.fmy.storage_bags.menu;
 
 import com.fmy.storage_bags.StorageBags;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;

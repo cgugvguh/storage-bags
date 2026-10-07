@@ -28,7 +28,7 @@ public class ModItemModeProvider extends ItemModelProvider {
         basicItem(ModItems.PLANT_STORAGE_BAG);
         basicItem(ModItems.INDUSTRY_STORAGE_BAG);
         basicItem(ModItems.FISHING_STORAGE_BAG);
-        basicItem(ModItems.BUTTLE_STORAGE_BAG);
+        basicItem(ModItems.BATTLE_STORAGE_BAG);
         basicItem(ModItems.BUILDING_STORAGE_BAG);
         basicItem(ModItems.HUSBANDRY_STORAGE_BAG);
         basicItem(ModItems.CUSTOM_STORAGE_BAG);
@@ -46,10 +46,7 @@ public class ModItemModeProvider extends ItemModelProvider {
     }
     public void basicItem(RegistryObject<Item> item)
     {
-        String path = null;
-        if (item.getId() != null) {
-            path = item.getId().getPath();
-        }
+        String path = item.getId().getPath();
         withExistingParent("item/" + path, mcLoc("item/generated"))
                 .texture("layer0", modLoc("item/" + path));
     }

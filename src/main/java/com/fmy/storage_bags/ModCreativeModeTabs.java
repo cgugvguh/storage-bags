@@ -1,5 +1,6 @@
 package com.fmy.storage_bags;
 
+import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -38,7 +39,7 @@ public class ModCreativeModeTabs {
                     () -> CreativeModeTab.builder()
                             .icon(() -> new ItemStack(ModItems.CUTTING_TREE_STORAGE_BAG.get()))
                             //物品栏图标文件,物品数据存在了ItemStack里面,包括材质,这里获取了Ice ether的数据作为图标
-                            .title(Component.translatable("itemGroup.storage_bags"))
+                            .title(Component.translatable("itemGroup.storage_bag"))
                             //用来翻译,系统在lang寻找对应语言的翻译
                             .displayItems((pParameters, pOutput) -> {
                                 //物品栏展示的物品
@@ -47,7 +48,7 @@ public class ModCreativeModeTabs {
                                 pOutput.accept(ModItems.PLANT_STORAGE_BAG.get());
                                 pOutput.accept(ModItems.INDUSTRY_STORAGE_BAG.get());
                                 pOutput.accept(ModItems.FISHING_STORAGE_BAG.get());
-                                pOutput.accept(ModItems.BUTTLE_STORAGE_BAG.get());
+                                pOutput.accept(ModItems.BATTLE_STORAGE_BAG.get());
                                 pOutput.accept(ModItems.BUILDING_STORAGE_BAG.get());
                                 pOutput.accept(ModItems.HUSBANDRY_STORAGE_BAG.get());
                                 pOutput.accept(ModItems.CUSTOM_STORAGE_BAG.get());

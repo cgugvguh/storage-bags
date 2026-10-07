@@ -36,9 +36,9 @@ public class ModItems {
     public static final RegistryObject<Item> FISHING_STORAGE_BAG =
             ITEMS.register("storage_bag/fishing_storage_bag",() -> new StorageBag
                     (new Item.Properties().stacksTo(1),"fishing"));
-    public static final RegistryObject<Item> BUTTLE_STORAGE_BAG =
-            ITEMS.register("storage_bag/buttle_storage_bag",() -> new StorageBag
-                    (new Item.Properties().stacksTo(1),"buttle"));
+    public static final RegistryObject<Item> BATTLE_STORAGE_BAG =
+            ITEMS.register("storage_bag/battle_storage_bag",() -> new StorageBag
+                    (new Item.Properties().stacksTo(1),"battle"));
     public static final RegistryObject<Item> BUILDING_STORAGE_BAG =
             ITEMS.register("storage_bag/building_storage_bag",() -> new StorageBag
                     (new Item.Properties().stacksTo(1),"building"));

@@ -4,6 +4,7 @@ import com.fmy.storage_bags.Internet.StorageActionPacket;
 import com.fmy.storage_bags.Internet.StorageSyncPacket;
 import com.fmy.storage_bags.item.StorageBag.Storage;
 import com.fmy.storage_bags.item.StorageBag.StorageBag;
+import com.fmy.storage_bags.item.StorageBag.StorageUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -50,6 +51,15 @@ public class StorageBagMenu extends AbstractContainerMenu {
     Runnable slotUpdateListener = () -> {};
 
     // ================= 服务端构造 =================
+
+    /**
+     *
+     * @param id 菜单 id，自动传入
+     * @param inv 玩家物品栏
+     * @param access 自动传入
+     * @param storage 储物袋存储的信息
+     * @param bagStack 储物袋物品堆
+     */
     public StorageBagMenu(int id, Inventory inv, ContainerLevelAccess access,
                           Storage storage, ItemStack bagStack) {
         super(ModMenuTypes.STORAGE_BAG_MENU.get(), id);
@@ -90,7 +100,7 @@ public class StorageBagMenu extends AbstractContainerMenu {
             String keyStr = buf.readUtf();
             int count = buf.readVarInt();
             Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(keyStr));
-            this.storage.getStorage().put(item, count);
+            this.storage.getStorageInfo().put(item, count);
         }
 
         this.lockedSlot = USE_ROW_SLOT_START + inv.selected;
@@ -112,8 +122,12 @@ public class StorageBagMenu extends AbstractContainerMenu {
         return this.storage;
     }
 
+    public ItemStack getBagStack(){
+        return this.bagStack;
+    }
+
     public int getStorageNum() {
-        return this.storage.getStorage().size();
+        return this.storage.getStorageInfo().size();
     }
 
     public int getSelectedItemIndex() {
@@ -138,50 +152,30 @@ public class StorageBagMenu extends AbstractContainerMenu {
     // ================= 快速移动：存入 storage =================
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) return ItemStack.EMPTY;
+        if(!StorageUtil.isStorageBag(bagStack)){//如果不是储物袋
+            return ItemStack.EMPTY;
+        }
+        Slot slot = this.slots.get(index);//通过索引获取被点击的槽位
+        if (!slot.hasItem()) return ItemStack.EMPTY;//如果是空的直接返回空物品堆
 
-        ItemStack stack = slot.getItem();
-        ItemStack result = stack.copy();
+        ItemStack itemStack = slot.getItem();//获取槽位修改前的物品
+        ItemStack result = itemStack.copy();//并复制一份
+        int stored = StorageUtil.tryStoreToStorage(bagStack, itemStack);//尝试存入
 
-        int stored = tryStoreToStorage(stack);
-        if (stored <= 0) return ItemStack.EMPTY;
+        if (stored <= 0) return ItemStack.EMPTY;//如果没存进去, 返回空物品堆表示没成功
 
-        stack.shrink(stored);
-        if (stack.isEmpty()) {
-            slot.setByPlayer(ItemStack.EMPTY);
-        } else {
+        itemStack.shrink(stored);//存进去了就扣除物品堆里相应的数量
+        if (itemStack.isEmpty()) {//如果物品堆是空的
+            slot.setByPlayer(ItemStack.EMPTY);//标记物品堆被玩家置空
+        } else {//标记槽位发生改变
             slot.setChanged();
         }
         this.broadcastChanges();
         if (slotUpdateListener != null) slotUpdateListener.run();
         if(player instanceof ServerPlayer serverPlayer) {
-            syncToClient(serverPlayer);
+            syncToClient(serverPlayer);//同步到客户端
         }
         return result;
-    }
-
-    /** 尝试把物品存入 storage，返回实际存入数量 */
-    private int tryStoreToStorage(ItemStack stack) {
-        if (storage == null || stack.isEmpty()) return 0;
-        Item item = stack.getItem();
-        Map<Item, Integer> map = storage.getStorage();
-        if (!map.containsKey(item)) return 0;
-
-        int max = StorageBag.getMaxStorage(this.bagStack);   // 或从 bagStack 取
-        int current = map.get(item);
-        if (current >= max) return 0;
-        int canStore = max - current;
-        int toStore = Math.min(canStore, stack.getCount());
-        map.put(item, current + toStore);
-        // 立即写回 NBT
-        if (this.bagStack != null && !this.bagStack.isEmpty()) {
-            StorageBag.saveToNbt(this.bagStack, this.storage);
-        }
-
-        this.broadcastChanges();
-        if (slotUpdateListener != null) slotUpdateListener.run();
-        return toStore;
     }
 
 
@@ -205,32 +199,16 @@ public class StorageBagMenu extends AbstractContainerMenu {
     public void removed(Player player) {
         super.removed(player);
         if (!player.level().isClientSide && this.bagStack != null) {
-            StorageBag.saveToNbt(this.bagStack, this.storage);
+            StorageUtil.saveToNbt(this.bagStack, this.storage);
         }
     }
-    public static void handle(StorageActionPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            ServerPlayer player = context.getSender();
-            if (player == null) return;
 
-            int amount = msg.amount;
-            if (amount < 0) amount = 0;
-            if (amount > 1_000_000) amount = 1_000_000;
-
-            if (player.containerMenu instanceof StorageBagMenu menu) {
-                menu.handleInputAmount(player, amount);
-            }
-        });
-        context.setPacketHandled(true);
-    }
-    public void handleInputAmount(Player player, int amount) {
-        // 这里写你的业务逻辑
-        // 比如：从 storage 取出 amount 个当前选中的物品
+    public void handleInputAmount(Player player, int amount) {//取出物品
+        // 从 storage 取出 amount 个当前选中的物品
         int selected = getSelectedItemIndex();//获取选中物品索引
         if (selected < 0 || selected >= getStorageNum()) return;//如果超出范围, 不处理
 
-        List<Item> items = new ArrayList<>(storage.getStorage().keySet());
+        List<Item> items = new ArrayList<>(storage.getStorageInfo().keySet());
         Item item = items.get(selected);//获取被选中物品的数量
 
         // 示例：取出 amount 个
@@ -245,10 +223,10 @@ public class StorageBagMenu extends AbstractContainerMenu {
      * @param amount 玩家想取出的数量
      * @return 实际取出并给到玩家的数量
      */
-    public int tryTakeFromStorage(Item item, int amount,Player pPlayer) {
+    public int tryTakeFromStorage(Item item, int amount, Player pPlayer) {
         if (item == null || amount <= 0) return 0;
 
-        Map<Item, Integer> map = storage.getStorage();//获取存储信息
+        Map<Item, Integer> map = storage.getStorageInfo();//获取存储信息
         if (!map.containsKey(item)) return 0;//检查是否有要取的物品
 
         int current = map.get(item);//获取物品数量
@@ -258,14 +236,13 @@ public class StorageBagMenu extends AbstractContainerMenu {
 
         // 先扣 storage
         map.put(item, current - toTake);//重置剩余物品信息
-
         // 给玩家
         ItemStack give = new ItemStack(item, toTake);
         boolean added = pPlayer.getInventory().add(give);
-
         // 如果背包塞不下，把没塞进去的部分还回 storage
         if (!added || !give.isEmpty()) {
             int leftover = give.getCount();
+
             if (leftover > 0) {
                 map.put(item, map.get(item) + leftover);
             }
@@ -273,7 +250,7 @@ public class StorageBagMenu extends AbstractContainerMenu {
         }
         // 立即写回 NBT
         if (this.bagStack != null && !this.bagStack.isEmpty()) {
-            StorageBag.saveToNbt(this.bagStack, this.storage);
+            StorageUtil.saveToNbt(this.bagStack, this.storage);
         }
 
         // 同步给客户端
@@ -285,7 +262,7 @@ public class StorageBagMenu extends AbstractContainerMenu {
     // StorageBagMenu
     public void updateStorageFromServer(String kindName, Map<Item, Integer> data) {
         // 保留原有物品列表结构，只更新数量
-        Map<Item, Integer> map = this.storage.getStorage();
+        Map<Item, Integer> map = this.storage.getStorageInfo();
         for (Map.Entry<Item, Integer> e : data.entrySet()) {
             map.put(e.getKey(), e.getValue());
         }
@@ -293,15 +270,29 @@ public class StorageBagMenu extends AbstractContainerMenu {
     }
     private void syncToClient(ServerPlayer player) {
         ModNetwork.CHANNEL.sendTo(
-                new StorageSyncPacket(storage.getKindName(), storage.getStorage()),
+                new StorageSyncPacket(storage.getKindName(), storage.getStorageInfo()),
                 player.connection.connection,
                 NetworkDirection.PLAY_TO_CLIENT
         );
     }
 
     public void updateStorage(Map<Item, Integer> newData) {
-        this.storage.getStorage().clear();
-        this.storage.getStorage().putAll(newData);
+        this.storage.getStorageInfo().clear();
+        this.storage.getStorageInfo().putAll(newData);
         if (slotUpdateListener != null) slotUpdateListener.run();
     }
+
+    public void storeAllFromInventory(ServerPlayer pPlayer) {
+        ItemStack bagStack = this.bagStack;
+        if (bagStack == null || bagStack.isEmpty()) return;
+        if (StorageUtil.storeAllFromInventory(bagStack, pPlayer)) {
+
+            // 同步给客户端
+            syncToClient(pPlayer);
+
+            this.broadcastChanges();
+            if (slotUpdateListener != null) slotUpdateListener.run();
+        }
+    }
+
 }

@@ -1,17 +1,20 @@
 package com.fmy.storage_bags.datagen;
 
+import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.StorageBags;
 import com.fmy.storage_bags.item.ModItem.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -70,7 +73,7 @@ public class ModRecipesProvider extends RecipeProvider implements IConditionBuil
                 .define('f', Items.FISHING_ROD)
                 .unlockedBy(getHasName(Items.LEATHER),has(Items.LEATHER))
                 .save(pWriter);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.BUTTLE_STORAGE_BAG.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.BATTLE_STORAGE_BAG.get())
                 .pattern(" # ")
                 .pattern("#f#")
                 .pattern("###")
@@ -102,6 +105,7 @@ public class ModRecipesProvider extends RecipeProvider implements IConditionBuil
                 .define('f', Items.DIAMOND)
                 .unlockedBy(getHasName(Items.LEATHER),has(Items.LEATHER))
                 .save(pWriter);
+
         //扩容插件, 通过低等级升级
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.GORDEN_EXPAND_PLUGIN.get())
                 .pattern("DDD")

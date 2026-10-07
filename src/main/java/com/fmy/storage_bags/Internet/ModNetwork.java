@@ -32,5 +32,10 @@ public class ModNetwork {
                 StorageSyncPacket::encode,
                 StorageSyncPacket::decode,
                 StorageSyncPacket::handle);
+        CHANNEL.registerMessage(id++,
+                StoreAllPacket.class,
+                StoreAllPacket::encode,
+                StoreAllPacket::decode,
+                StoreAllPacket::handle);
     }
 }

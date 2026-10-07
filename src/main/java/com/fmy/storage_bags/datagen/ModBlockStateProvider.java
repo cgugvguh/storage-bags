@@ -1,5 +1,6 @@
 package com.fmy.storage_bags.datagen;
 
+import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.StorageBags;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.BlockStateProvider;

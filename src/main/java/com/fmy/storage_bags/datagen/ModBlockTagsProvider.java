@@ -1,8 +1,11 @@
 package com.fmy.storage_bags.datagen;
 
+import com.fmy.storage_bags.Block.ModBlocks;
 import com.fmy.storage_bags.StorageBags;
+import com.fmy.storage_bags.tag.ModBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
