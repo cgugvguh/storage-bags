@@ -121,6 +121,9 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
     }
 
     public static boolean addKind(ItemStack bagStack, ItemStack itemStack) {
+        if(itemStack.getMaxStackSize() == 1){
+            return false;
+        }
         int maxNum = Math.max((StorageUtil.getMaxStorage(bagStack) / 64) * 27, 27);
         maxNum = Math.min(maxNum, 100);
         int size = getStorage(bagStack).getStorageInfo().size();
