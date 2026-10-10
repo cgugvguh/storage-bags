@@ -297,12 +297,11 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
         int amount = 0;
         if ("byTakeAll".equals(resource)) {
             amount = 1000000;
-        } else if (text != null && !text.isEmpty()) {
+        } else if (!text.isEmpty()) {
             // 解析：空串或非数字都当作 0
             try {
                 amount = Integer.parseInt(text);
-            } catch (NumberFormatException e) {
-                amount = 0;
+            } catch (NumberFormatException ignored) {
             }
         }
 
