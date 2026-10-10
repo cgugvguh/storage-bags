@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class ExpandPlugin extends Item {
     private int multiplier = 0;
+
     public ExpandPlugin(Tier pTier, Properties pProperties) {
         super(pProperties);
         if (pTier == Tiers.IRON) multiplier = 2;
@@ -43,13 +44,13 @@ public class ExpandPlugin extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack plugin = player.getItemInHand(hand);
         ItemStack bag = player.getOffhandItem();
-        if(!(bag.getItem() instanceof StorageBag)){
+        if (!(bag.getItem() instanceof StorageBag)) {
             return super.use(level, player, hand);
         }
-        if (level.isClientSide()){
-            if(StorageUtil.canSetMaxStorageByMultiplier(bag, multiplier)){
+        if (level.isClientSide()) {
+            if (StorageUtil.canSetMaxStorageByMultiplier(bag, multiplier)) {
                 return InteractionResultHolder.sidedSuccess(plugin, true);
-            }else {
+            } else {
                 return InteractionResultHolder.fail(plugin);
             }
         }
@@ -62,6 +63,7 @@ public class ExpandPlugin extends Item {
 
         return InteractionResultHolder.fail(plugin);
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable("storage_bags.plugin.description"));

@@ -44,8 +44,8 @@ public class ModItemModeProvider extends ItemModelProvider {
         basicItem(ModItems.NETHERITE_FILL_PLUGIN);
         basicItem(ModItems.INFINITE_FILL_PLUGIN);
     }
-    public void basicItem(RegistryObject<Item> item)
-    {
+
+    public void basicItem(RegistryObject<Item> item) {
         String path = item.getId().getPath();
         withExistingParent("item/" + path, mcLoc("item/generated"))
                 .texture("layer0", modLoc("item/" + path));

@@ -22,14 +22,17 @@ public enum Kinds {//包含了种类信息
     CUSTOM("custom");
     private final String kindName;//种类名
     private final List<Item> itemKind = new ArrayList<>();//物品种类信息
+
     Kinds(String kindName) {
         this.kindName = kindName;//设置种类信息
         setStorage();//设置存储信息
     }
-    public List<Item> getItemKind(){
+
+    public List<Item> getItemKind() {
         return itemKind;
     }
-    public static Kinds getKindFromName(String name){
+
+    public static Kinds getKindFromName(String name) {
         return switch (name) {
             case "cutting_tree" -> Kinds.CUTTING_TREE;
             case "mining_ore" -> Kinds.MINING_ORE;
@@ -42,7 +45,8 @@ public enum Kinds {//包含了种类信息
             default -> Kinds.CUSTOM;
         };
     }
-    public String getKindName(){
+
+    public String getKindName() {
         return kindName;
     }
 
@@ -51,8 +55,8 @@ public enum Kinds {//包含了种类信息
             case "cutting_tree" -> {
                 // ---- 橡木 (Oak) ----
                 itemKind.add(Items.OAK_LOG);
-                itemKind.add(Items.OAK_WOOD );
-                itemKind.add(Items.STRIPPED_OAK_LOG );
+                itemKind.add(Items.OAK_WOOD);
+                itemKind.add(Items.STRIPPED_OAK_LOG);
                 itemKind.add(Items.STRIPPED_OAK_WOOD);
                 itemKind.add(Items.OAK_PLANKS);
                 itemKind.add(Items.OAK_SAPLING);

@@ -6,10 +6,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author 宛
@@ -25,6 +28,7 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 从 itemStack 获取 种类信息
+     *
      * @param bagStack 储物袋本身物品堆
      * @return 储物袋种类名称
      */
@@ -32,17 +36,20 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         StorageBag storageBag = (StorageBag) bagStack.getItem();
         return storageBag.getKindName();
     }
+
     /**
      * 判断一个物品堆是否为储物袋
+     *
      * @param itemStack 物品堆
      * @return 是否为储物袋
      */
-    public static boolean isStorageBag(ItemStack itemStack){
+    public static boolean isStorageBag(ItemStack itemStack) {
         return itemStack.getItem() instanceof StorageBag;
     }
 
     /**
      * 从 ItemStack 的 NBT 读取 bagId，没有就生成一个写回去
+     *
      * @param bagStack 储物袋本身物品堆
      * @return 储物袋 UUID
      */
@@ -54,8 +61,10 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         }
         return tag.getUUID(BAG_ID_KEY);//返回 UUID
     }
+
     /**
      * 获取储物袋的存取模式，用于菜单类中
+     *
      * @param bagStack 储物袋物品堆
      * @return 模式，仅有普通存取 “ N ”和 快速存取 “ Q ”
      */
@@ -64,8 +73,10 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         return tag.getString(BAG_MODE);//返回 UUID
 
     }
+
     /**
      * 获取储物袋的存取模式，用于菜单类中
+     *
      * @param bagStack 储物袋物品堆
      * @return 模式，仅有普通存取 “ N ”和 快速存取 “ Q ”
      */
@@ -76,8 +87,10 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         }
         return tag.getString(BAG_MODE);//返回 UUID
     }
+
     /**
      * 获取储物袋的存取模式，用于菜单类中
+     *
      * @param bagStack 储物袋物品堆
      * @return 模式，仅有普通存取 “ N ”和 快速存取 “ Q ”
      */
@@ -93,6 +106,7 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 从 itemStack 获取 Storage
+     *
      * @param bagStack 储物袋本身物品堆
      * @return 根据物品堆来读取的 storage
      */
@@ -105,6 +119,7 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         BAG_STORAGE.put(id, storage);//保存 storage
         return storage;//返回加载好或创建好的 storage
     }
+
     public static boolean addKind(ItemStack bagStack, ItemStack itemStack) {
         int maxNum = Math.max((StorageUtil.getMaxStorage(bagStack) / 64) * 27, 27);
         maxNum = Math.min(maxNum, 100);
@@ -114,11 +129,13 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         }
         Storage storage = getStorage(bagStack);
         storage.addStorageKind(itemStack.getItem());//不超添加种类
-        saveToNbt(bagStack,storage);
+        saveToNbt(bagStack, storage);
         return true;
     }
+
     /**
      * 根据这个物品的 bagId 拿到它专属的 存储上限
+     *
      * @param bagStack 储物袋本身物品堆
      * @return 根据 UUID 返回最大存储数量
      */
@@ -131,8 +148,9 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 是否能把储物袋上限设置为 newMax
+     *
      * @param bagStack 储物袋物品堆
-     * @param newMax 新上限
+     * @param newMax   新上限
      * @return 是否能修改
      */
     public static boolean canSetStorage(ItemStack bagStack, int newMax) {
@@ -144,7 +162,8 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 是否能根据乘数设定新的上限
-     * @param bagStack 储物袋物品堆
+     *
+     * @param bagStack   储物袋物品堆
      * @param multiplier 乘数
      * @return 是否能重设
      */
@@ -154,9 +173,11 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
                 : (int) (DEFAULT_MAX_STORAGE * Math.pow(2, multiplier));
         return canSetStorage(bagStack, newMax);
     }
+
     /**
      * 给储物袋设定一个最大储物上限
-     * @param bagStack 储物袋本身物品堆
+     *
+     * @param bagStack   储物袋本身物品堆
      * @param maxStorage 扩容乘数
      * @return 是否扩容成功
      */
@@ -170,12 +191,13 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 根据乘数重设最大存储上限，用于扩容储物袋
-     * @param bagStack 储物袋本身物品堆
+     *
+     * @param bagStack   储物袋本身物品堆
      * @param multiplier 扩容乘数
      * @return 是否扩容成功
      */
     public static boolean setMaxStorageByMultiplier(ItemStack bagStack, int multiplier) {
-        if(canSetMaxStorageByMultiplier(bagStack, multiplier)) {
+        if (canSetMaxStorageByMultiplier(bagStack, multiplier)) {
             int newMax = (multiplier == -1)//如果乘数为 -1, 扩容为最大值, 不为 -1 则根据乘数得到一个合适最大存储量
                     ? Integer.MAX_VALUE
                     : (int) (DEFAULT_MAX_STORAGE * Math.pow(2, multiplier));
@@ -186,10 +208,11 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 判断是否能填充进去
+     *
      * @param bagStack 储物袋物品堆
      * @return 是否能填入东西
      */
-    public static boolean canFill(ItemStack bagStack){
+    public static boolean canFill(ItemStack bagStack) {
         Storage storage = getStorage(bagStack);
         int min = storage.getMinCount();
         return min < getMaxStorage(bagStack);
@@ -197,6 +220,7 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 是否能根据乘数填充
+     *
      * @param bagStack 储物袋物品堆
      * @return 是否能根据乘数填充
      */
@@ -206,22 +230,25 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 按数字填充所有物品(不包括黑名单物品)
-     * @param bagStack 储物袋
+     *
+     * @param bagStack   储物袋
      * @param fillNumber 要填充数量
      * @return 是否填充成功
      */
-    public static boolean fill(ItemStack bagStack, int fillNumber){
-        if(!canFill(bagStack)){return false;}
+    public static boolean fill(ItemStack bagStack, int fillNumber) {
+        if (!canFill(bagStack)) {
+            return false;
+        }
         boolean changed = false;
         Storage storage = getStorage(bagStack);//获取储物信息
         Map<Item, Integer> storageInfo = storage.getStorageInfo();
         Set<Item> items = storageInfo.keySet();
-        for(Item item : items){//遍历储物袋物品信息
-            if(new ItemStack(item).is(ModItemTags.FILL_BLACKLIST)){
+        for (Item item : items) {//遍历储物袋物品信息
+            if (new ItemStack(item).is(ModItemTags.FILL_BLACKLIST)) {
                 continue;
             }
             int number = storageInfo.get(item);
-            if(number < getMaxStorage(bagStack)){
+            if (number < getMaxStorage(bagStack)) {
                 changed = true;
             }
             storageInfo.put(item, Math.min(getMaxStorage(bagStack), number + fillNumber));//进行添加操作
@@ -234,26 +261,30 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 根据乘数填充物品
-     * @param bagStack 储物袋物品堆
+     *
+     * @param bagStack   储物袋物品堆
      * @param multiplier 乘数
      * @return 是否填充成功
      */
-    public static boolean fillByMultiplier(ItemStack bagStack, int multiplier){
-        if(!canFillByMultiplier(bagStack)){ return false; }
+    public static boolean fillByMultiplier(ItemStack bagStack, int multiplier) {
+        if (!canFillByMultiplier(bagStack)) {
+            return false;
+        }
         int maxNumber = Math.min(getMaxStorage(bagStack), 1728);//对填充加以限制, 1728 (3 * 9 * 64)
         int addNumber;
-        if(multiplier == -1){//如果乘数为 -1, 直接准备填入最大值
+        if (multiplier == -1) {//如果乘数为 -1, 直接准备填入最大值
             addNumber = getMaxStorage(bagStack);
-        }else{//如果不是 -1, 根据乘数计算打算添加的量
-            addNumber = (int)((multiplier/32.0) * maxNumber);//根据乘数增加数量
+        } else {//如果不是 -1, 根据乘数计算打算添加的量
+            addNumber = (int) ((multiplier / 32.0) * maxNumber);//根据乘数增加数量
             addNumber = Math.min(addNumber, maxNumber);//最大不超过 1728
         }
-        return fill(bagStack,addNumber);
+        return fill(bagStack, addNumber);
     }
 
     /**
      * 尝试将物品存入储物袋
-     * @param bagStack 储物袋物品堆
+     *
+     * @param bagStack  储物袋物品堆
      * @param itemStack 要存入的物品
      */
     public static int tryStoreToStorage(ItemStack bagStack, ItemStack itemStack) {
@@ -274,12 +305,13 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 将当前选中的物品存入储物袋
+     *
      * @param bagStack 储物袋物品堆
-     * @param item 要存入的物品种类
-     * @param pPlayer 玩家
+     * @param item     要存入的物品种类
+     * @param pPlayer  玩家
      * @return 是否存入成功
      */
-    public static boolean storeOneFromInventory(ItemStack bagStack,Item item, ServerPlayer pPlayer) {
+    public static boolean storeOneFromInventory(ItemStack bagStack, Item item, ServerPlayer pPlayer) {
         boolean changed = false;
         Inventory inv = pPlayer.getInventory();
 
@@ -287,7 +319,7 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack stack = inv.getItem(i);
             if (stack.isEmpty()) continue;
-            if(stack.getItem() != item) {
+            if (stack.getItem() != item) {
                 continue;
             }
             int stored = StorageUtil.tryStoreToStorage(bagStack, stack);
@@ -303,10 +335,12 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
         }
         return changed;
     }
+
     /**
      * 存入所有可以存入的物品
+     *
      * @param bagStack 储物袋物品堆
-     * @param pPlayer 玩家(用于获取物品栏)
+     * @param pPlayer  玩家(用于获取物品栏)
      * @return 是否移动成功
      */
     public static boolean storeAllFromInventory(ItemStack bagStack, ServerPlayer pPlayer) {
@@ -334,6 +368,7 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 从 itemStack 获取 种类信息
+     *
      * @param bagStack 储物袋本身物品堆
      * @return 从 NBT 加载好或者创建好的 Storage
      */
@@ -359,7 +394,8 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 将储物信息保存到储物袋物品堆
-     * @param stack 储物袋物品堆
+     *
+     * @param stack   储物袋物品堆
      * @param storage 储物信息
      */
     public static void saveToNbt(ItemStack stack, Storage storage) {
@@ -377,10 +413,11 @@ public class StorageUtil {//负责数据储存和处理, 注意: 所有跟储物
 
     /**
      * 通过材质返回扩容乘数，传入扩容插件获取乘数
+     *
      * @param tier 传入的材质
      * @return 返回扩容乘数
      */
-    public static int getMultiplier(Tier tier){
+    public static int getMultiplier(Tier tier) {
         int multiplier = 0;
         if (tier == Tiers.IRON) multiplier = 2;
         else if (tier == Tiers.GOLD) multiplier = 4;

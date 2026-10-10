@@ -1,15 +1,10 @@
 package com.fmy.storage_bags.Internet;
 
 import com.fmy.storage_bags.menu.StorageBagMenu;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**

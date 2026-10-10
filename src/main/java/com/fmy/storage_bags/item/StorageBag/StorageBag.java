@@ -1,7 +1,5 @@
 package com.fmy.storage_bags.item.StorageBag;
 
-import com.fmy.storage_bags.item.Plugin.ExpandPlugin;
-import com.fmy.storage_bags.item.Plugin.FillPlugin;
 import com.fmy.storage_bags.menu.StorageBagMenu;
 import com.fmy.storage_bags.stats.ModStats;
 import net.minecraft.ChatFormatting;
@@ -25,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author 宛
@@ -33,21 +30,24 @@ import java.util.UUID;
  */
 public class StorageBag extends Item {//负责物品交互逻辑, 只保留储物袋的各类性质和交互逻辑
     private final Kinds kind;
-    public StorageBag(Properties pProperties,String kind) {
+
+    public StorageBag(Properties pProperties, String kind) {
         super(pProperties);
         this.kind = Kinds.getKindFromName(kind);//储物袋种类
     }
 
     /**
      * 返回储物袋的种类名
+     *
      * @return 储物袋种类名
      */
-    public String getKindName(){
+    public String getKindName() {
         return kind.getKindName();
     }
 
     /**
      * 返回储物袋的种类
+     *
      * @return 储物袋种类
      */
     public Kinds getKind() {
@@ -94,11 +94,11 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
                         return InteractionResultHolder.fail(bagStack);
                     }
                     //设置自定义储物袋上下限
-                    if(!StorageUtil.addKind(bagStack, itemStack)) {
+                    if (!StorageUtil.addKind(bagStack, itemStack)) {
                         return InteractionResultHolder.fail(bagStack);
                     }
 
-                    if(pPlayer.isCrouching()){//如果蹲着直接存入
+                    if (pPlayer.isCrouching()) {//如果蹲着直接存入
                         int stored = StorageUtil.tryStoreToStorage(bagStack, itemStack);
                         if (stored <= 0) return InteractionResultHolder.fail(bagStack);
                         itemStack.shrink(stored);
@@ -141,8 +141,8 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        if(StorageUtil.isStorageBag(pStack)){
-            if(Screen.hasShiftDown()){
+        if (StorageUtil.isStorageBag(pStack)) {
+            if (Screen.hasShiftDown()) {
                 String storageKind = StorageUtil.getStorage(pStack).getKindName();
                 switch (storageKind) {
                     case "custom" -> {
@@ -173,7 +173,7 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
                         pTooltipComponents.add(Component.translatable("tooltip.storage_bags.description.husbandry").withStyle(ChatFormatting.BLUE));
                     }
                 }
-            }else{
+            } else {
                 pTooltipComponents.add(Component.translatable("tooltip.storage_bags.description").withStyle(ChatFormatting.BLUE));
             }
         }

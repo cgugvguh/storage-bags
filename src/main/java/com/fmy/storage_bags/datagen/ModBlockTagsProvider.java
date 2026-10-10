@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 //生成方块的标签，例如需要挖掘工具和需要什么挖掘工具
 //位于 resources/data/minecraft/tags/blocks
 public class ModBlockTagsProvider extends BlockTagsProvider {//方块标签
+
     public ModBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, StorageBags.MOD_ID, existingFileHelper);
     }

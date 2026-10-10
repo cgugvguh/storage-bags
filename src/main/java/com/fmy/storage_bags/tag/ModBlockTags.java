@@ -15,6 +15,7 @@ public class ModBlockTags {
     private static TagKey<Block> create(String pName) {
         return TagKey.create(Registries.BLOCK, new ResourceLocation(StorageBags.MOD_ID, pName));
     }
+
     private static TagKey<Block> createForgeTag(String pName) {
         return TagKey.create(Registries.BLOCK, new ResourceLocation("forge", pName));
     }

@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class FillPlugin extends Item {
     private int multiplier = 0;
+
     public FillPlugin(Tier tier, Properties pProperties) {
         super(pProperties);
         if (tier == Tiers.IRON) multiplier = 2;
@@ -36,11 +37,11 @@ public class FillPlugin extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack plugin = player.getItemInHand(hand);
         ItemStack bagStack = player.getOffhandItem();
-        if(!(bagStack.getItem() instanceof StorageBag)){
+        if (!(bagStack.getItem() instanceof StorageBag)) {
             return super.use(level, player, hand);
         }
-        if (level.isClientSide){
-            if(StorageUtil.canFill(bagStack)){
+        if (level.isClientSide) {
+            if (StorageUtil.canFill(bagStack)) {
                 return InteractionResultHolder.sidedSuccess(plugin, true);//客户端提前返回
             }
             return InteractionResultHolder.fail(plugin);

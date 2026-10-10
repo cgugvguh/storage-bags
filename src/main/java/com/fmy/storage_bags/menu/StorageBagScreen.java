@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.Map;
 @OnlyIn(Dist.CLIENT)
 public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
     private static final ResourceLocation BG_LOCATION =
-            new ResourceLocation("storage_bags","textures/gui/container/storage_bag.png");
+            new ResourceLocation("storage_bags", "textures/gui/container/storage_bag.png");
     private static final int SCROLLER_FULL_HEIGHT = 54;
     private static final int RECIPES_COLUMNS = 9;
     private static final int RECIPES_ROWS = 3;
@@ -53,7 +52,9 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
         --this.titleLabelY;
     }
 
-    /** 每次渲染时从菜单取最新的物品条目列表，避免数据不同步 */
+    /**
+     * 每次渲染时从菜单取最新的物品条目列表，避免数据不同步
+     */
     private List<Map.Entry<Item, Integer>> getEntries() {
         return new ArrayList<>(this.menu.getStorage().getStorageInfo().entrySet());
     }
@@ -100,7 +101,7 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
             int x = this.leftPos + RECIPES_X + idx % RECIPES_COLUMNS * 16;
             int y = this.topPos + RECIPES_Y + idx / RECIPES_COLUMNS * 18 + 2;
             if (mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 18) {//绘出名称信息
-                Item item =  entries.get(i).getKey();
+                Item item = entries.get(i).getKey();
                 String count = String.valueOf(entries.get(i).getValue());
 
                 Component toolTip = Component.empty()
@@ -142,13 +143,13 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
             // 数量：右下角右对齐
             int value = entry.getValue();
             String num = String.valueOf(value);
-            if(value > 1000){
+            if (value > 1000) {
                 if (value > 1000000000) {
                     num = String.format("%.2f", value / 1000_000_000.0) + "b";
                     int decimal = String.valueOf(value).length();
-                }else if(value > 1000000){
+                } else if (value > 1000000) {
                     num = String.format("%.2f", value / 1000_000.0) + "m";
-                }else{
+                } else {
                     num = String.format("%.2f", value / 1000.0) + "k";
                 }
             }
@@ -176,7 +177,7 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
                 Minecraft.getInstance().getSoundManager()
                         .play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
                 this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, l);
-                if(menu.getBagMode().equals("Q")){
+                if (menu.getBagMode().equals("Q")) {
                     onConfirm("take");
                 }
                 return true;
@@ -233,6 +234,7 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
             this.startIndex = 0;
         }
     }
+
     @Override
     protected void init() {
         super.init();
@@ -293,9 +295,9 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
     private void onConfirm(String resource) {
         String text = this.countInput.getValue();
         int amount = 0;
-        if("byTakeAll".equals(resource)) {
+        if ("byTakeAll".equals(resource)) {
             amount = 1000000;
-        }else if(text != null && !text.isEmpty()) {
+        } else if (text != null && !text.isEmpty()) {
             // 解析：空串或非数字都当作 0
             try {
                 amount = Integer.parseInt(text);
@@ -311,27 +313,31 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
         ModNetwork.CHANNEL.sendToServer(new StorageActionPacket(amount));
 
     }
+
     private void save() {
-        if(Screen.hasShiftDown()) {
+        if (Screen.hasShiftDown()) {
             saveAll();
-        }else{
+        } else {
             ModNetwork.CHANNEL.sendToServer(new StoreOnePacket());
         }
     }
+
     private void saveAll() {
         ModNetwork.CHANNEL.sendToServer(new StoreAllPacket());
     }
 
     /**
      * 直接给输入框数字修改掉
+     *
      * @param count 要修改的数字
      */
     private void setCountInput(int count) {
-        if(Screen.hasShiftDown()) {
+        if (Screen.hasShiftDown()) {
             count /= 2;
         }
         this.countInput.setValue(Integer.toString(count));
     }
+
     private void clearCountInput() {
         this.countInput.setValue("");
     }

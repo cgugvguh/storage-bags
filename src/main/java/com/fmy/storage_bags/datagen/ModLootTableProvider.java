@@ -15,6 +15,6 @@ public class ModLootTableProvider {
     public static LootTableProvider creat(PackOutput packOutput) {
         return new LootTableProvider(packOutput, Set.of(), List.of(
                 new LootTableProvider.SubProviderEntry
-                (ModBlockLootTablesProvider::new, LootContextParamSets.BLOCK)));
+                        (ModBlockLootTablesProvider::new, LootContextParamSets.BLOCK)));
     }
 }

@@ -12,7 +12,8 @@ import java.util.function.Supplier;
  * @version 1.0
  */
 public class StoreAllPacket {
-    public StoreAllPacket() {}
+    public StoreAllPacket() {
+    }
 
     public static void encode(StoreAllPacket msg, FriendlyByteBuf buf) {
         // 无参数

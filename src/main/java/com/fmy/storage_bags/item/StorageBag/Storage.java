@@ -12,6 +12,7 @@ import java.util.Map;
 public class Storage {
     private final String kindName;
     private final Map<Item, Integer> storageInfo = new LinkedHashMap<>();//存储数量和物品种类信息
+
     public Storage(String kindName) {
         Kinds kind = getKind(kindName);//获取种类信息
         this.kindName = kindName;//保存种类名
@@ -20,7 +21,8 @@ public class Storage {
             storageInfo.put(item, 0);
         }
     }
-    public static Kinds getKind(String kind){//根据种类名获取种类, 用于初始化
+
+    public static Kinds getKind(String kind) {//根据种类名获取种类, 用于初始化
         return Kinds.getKindFromName(kind);
     }
 
@@ -36,24 +38,32 @@ public class Storage {
         storageInfo.put(item, 0);
     }
 
-    /** 某种物品是否允许存入 */
+    /**
+     * 某种物品是否允许存入
+     */
     public boolean isAllowed(Item item) {
         return storageInfo.containsKey(item);
     }
 
-    /** 查询数量 */
+    /**
+     * 查询数量
+     */
     public int getCount(Item item) {
         return storageInfo.getOrDefault(item, 0);
     }
 
-    /** 设置数量 */
+    /**
+     * 设置数量
+     */
     public void setCount(Item item, int count) {
         if (storageInfo.containsKey(item)) {
             storageInfo.put(item, count);
         }
     }
 
-    /** 增加数量，返回实际增加的量 */
+    /**
+     * 增加数量，返回实际增加的量
+     */
     public int addCount(Item item, int amount) {
         if (!storageInfo.containsKey(item)) return 0;//如果没有此类物品, 返回 0
         int old = storageInfo.get(item);
@@ -61,7 +71,9 @@ public class Storage {
         return amount;//返回增量
     }
 
-    /** 减少数量，返回实际减少的量 */
+    /**
+     * 减少数量，返回实际减少的量
+     */
     public int removeCount(Item item, int amount) {
         if (!storageInfo.containsKey(item)) return 0;
         int old = storageInfo.get(item);
@@ -70,7 +82,9 @@ public class Storage {
         return removed;
     }
 
-    /** 当前存储物品中数量最大的值，用于 check 上限 */
+    /**
+     * 当前存储物品中数量最大的值，用于 check 上限
+     */
     public int getMaxCount() {
         int max = 0;
         for (int num : storageInfo.values()) {
@@ -78,7 +92,8 @@ public class Storage {
         }
         return max;
     }
-    public int getMinCount(){
+
+    public int getMinCount() {
         int min = 0;
         for (int num : storageInfo.values()) {
             if (num < min) min = num;

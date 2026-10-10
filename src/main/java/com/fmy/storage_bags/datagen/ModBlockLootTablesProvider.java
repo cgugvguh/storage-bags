@@ -35,12 +35,14 @@ public class ModBlockLootTablesProvider extends BlockLootSubProvider {
                 createOreLikeDrops(ModBlocks.RAW_ICE_ETHER_BLOCK.get(),
                 ModItems.RAW_ICE_ETHER.get(),2.0F,5.0F));*/
     }
-    protected LootTable.Builder createOreLikeDrops(Block pBlock,Item pItem,Float pMin,Float pMax) {
+
+    protected LootTable.Builder createOreLikeDrops(Block pBlock, Item pItem, Float pMin, Float pMax) {
         return createSilkTouchDispatchTable(pBlock,
                 this.applyExplosionDecay(pBlock, LootItem.lootTableItem(pItem)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(pMin, pMax)))
-                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(pMin, pMax)))
+                        .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
     }
+
     @Override
     protected Iterable<Block> getKnownBlocks() {
         return ModBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;

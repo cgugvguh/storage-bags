@@ -14,7 +14,7 @@ public enum ModTiers implements Tier {
     /*POWDERED_ROSE(3, 666, 7.0F, 2.5F, 30, () -> {
         return Ingredient.of(ModItemTags.POWDERED_ROSE);
     }),*/
-   INFINITE(-1, -1, -1, -1, -1, () -> {
+    INFINITE(-1, -1, -1, -1, -1, () -> {
         return Ingredient.of(Items.NETHERITE_BLOCK);
     }),
     ;

@@ -21,7 +21,7 @@ public class StorageSyncPacket {
     private final Map<Item, Integer> data;
     private final String mode;
 
-    public StorageSyncPacket(String kindName, Map<Item, Integer> data,String mode) {
+    public StorageSyncPacket(String kindName, Map<Item, Integer> data, String mode) {
         this.kindName = kindName;
         this.data = data;
         this.mode = mode;

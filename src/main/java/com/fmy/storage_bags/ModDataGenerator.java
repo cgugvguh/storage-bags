@@ -29,16 +29,16 @@ public class ModDataGenerator {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        generator.addProvider(event.includeServer(),new ModRecipesProvider(packOutput));
-        generator.addProvider(event.includeServer(),new LootTableProvider(packOutput, Set.of(), List.of(
+        generator.addProvider(event.includeServer(), new ModRecipesProvider(packOutput));
+        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Set.of(), List.of(
                 new LootTableProvider.SubProviderEntry(ModBlockLootTablesProvider::new, LootContextParamSets.BLOCK))));
         BlockTagsProvider blockTagsProvider = generator.addProvider(event.includeServer(),
-                new ModBlockTagsProvider(packOutput,lookupProvider,existingFileHelper));
+                new ModBlockTagsProvider(packOutput, lookupProvider, existingFileHelper));
         generator.addProvider(event.includeServer(), new ModItemTagsProvider
-                (packOutput,lookupProvider,blockTagsProvider.contentsGetter(),existingFileHelper));
-        generator.addProvider(event.includeClient(),new ModBlockStateProvider(packOutput,existingFileHelper));
-        generator.addProvider(event.includeClient(),new ModItemModeProvider(packOutput,existingFileHelper));
-        generator.addProvider(event.includeClient(),new ModEnUsLangProvider(packOutput));
-        generator.addProvider(event.includeClient(),new ModZhCnLangProvider(packOutput));
+                (packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModBlockStateProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModItemModeProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModEnUsLangProvider(packOutput));
+        generator.addProvider(event.includeClient(), new ModZhCnLangProvider(packOutput));
     }
 }
