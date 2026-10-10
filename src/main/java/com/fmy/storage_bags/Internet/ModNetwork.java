@@ -37,5 +37,15 @@ public class ModNetwork {
                 StoreAllPacket::encode,
                 StoreAllPacket::decode,
                 StoreAllPacket::handle);
+        CHANNEL.registerMessage(id++,
+                ModeChangePacket.class,
+                ModeChangePacket::encode,
+                ModeChangePacket::decode,
+                ModeChangePacket::handle);
+        CHANNEL.registerMessage(id++,
+                StoreOnePacket.class,
+                StoreOnePacket::encode,
+                StoreOnePacket::decode,
+                StoreOnePacket::handle);
     }
 }

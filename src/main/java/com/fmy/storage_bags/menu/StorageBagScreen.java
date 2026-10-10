@@ -1,12 +1,11 @@
 package com.fmy.storage_bags.menu;
 
-import com.fmy.storage_bags.Internet.ModNetwork;
-import com.fmy.storage_bags.Internet.StorageActionPacket;
-import com.fmy.storage_bags.Internet.StoreAllPacket;
+import com.fmy.storage_bags.Internet.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -18,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,11 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
     private static final ResourceLocation BG_LOCATION =
             new ResourceLocation("storage_bags","textures/gui/container/storage_bag.png");
     private static final int SCROLLER_FULL_HEIGHT = 54;
-    private static final int RECIPES_COLUMNS = 6;
+    private static final int RECIPES_COLUMNS = 9;
     private static final int RECIPES_ROWS = 3;
     private static final int RECIPES_X = 7;
     private static final int RECIPES_Y = 14;
-    public static final int SCROLLER_X = 106;
+    public static final int SCROLLER_X = 154;
     public static final int SCROLLER_Y = 14;
     private static final int VISIBLE_COUNT = RECIPES_COLUMNS * RECIPES_ROWS;
 
@@ -47,6 +47,8 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
 
     public StorageBagScreen(StorageBagMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
+        this.imageWidth = 230;
+        this.imageHeight = 166;
         menu.registerUpdateListener(this::containerChanged);
         --this.titleLabelY;
     }
@@ -60,6 +62,8 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(g);//画背景
         super.render(g, mouseX, mouseY, partialTick);
+        String mode = menu.getBagMode();
+        g.drawString(this.font, mode, this.leftPos + 174, this.topPos + 58, 0xFFFFFF);
         this.renderTooltip(g, mouseX, mouseY);//画提示(鼠标移动到这个物品上面时显示)
     }
 
@@ -74,7 +78,7 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
         // 滚动条
         int k = (int) (41.0F * this.scrollOffs);
         g.blit(BG_LOCATION, x + SCROLLER_X, y + SCROLLER_Y + k,
-                176 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15, 256, 256);
+                230 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15, 256, 256);
 
         // 按钮 + 物品
         int px = x + RECIPES_X;
@@ -158,7 +162,7 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {//鼠标点击方法
         this.scrolling = false;
         List<Map.Entry<Item, Integer>> entries = getEntries();
         int end = this.startIndex + VISIBLE_COUNT;
@@ -172,6 +176,9 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
                 Minecraft.getInstance().getSoundManager()
                         .play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
                 this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, l);
+                if(menu.getBagMode().equals("Q")){
+                    onConfirm("take");
+                }
                 return true;
             }
         }
@@ -233,31 +240,54 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
         int y = this.topPos;
 
         // 输入框：setFilter 限制只能输入数字
-        this.countInput = new EditBox(this.font, x + 120, y + 14, 48, 18,
+        this.countInput = new EditBox(this.font, x + 188, y + 16, 36, 14,
                 Component.literal("count"));
         this.countInput.setMaxLength(6);
         this.countInput.setFilter(s -> s.matches("\\d*"));   // 只允许数字，空串也允许
         this.addRenderableWidget(this.countInput);
-        // 设置默认值：当前选中物品的数量
+        // 设置默认值：当前选中物品的数量, 预设 64
+        setCountInput(64);
 
         // 确定按钮
         Button button = Button.builder(
                 Component.translatable("storage_bags.screen.button.confirm"),
                 btn -> onConfirm("byConfirm")
-        ).bounds(x + 120, y + 53, 48, 18).build();
+        ).bounds(x + 188, y + 33, 36, 16).build();
+        this.addRenderableWidget(button);
+
+        button = Button.builder(//设为 1
+                Component.literal("1"),
+                btn -> setCountInput(1)
+        ).bounds(x + 168, y + 14, 16, 16).build();
+        this.addRenderableWidget(button);
+        button = Button.builder(//设为 64
+                Component.literal("64"),
+                btn -> setCountInput(64)
+        ).bounds(x + 168, y + 34, 16, 16).build();
+        this.addRenderableWidget(button);
+        button = Button.builder(//模式切换按键
+                Component.empty(),
+                btn -> changeMode()
+        ).bounds(x + 168, y + 54, 16, 16).build();
+        this.addRenderableWidget(button);
+
+        //存入按钮
+        button = Button.builder(
+                Component.literal("↑"),
+                btn -> save()
+        ).bounds(x + 188, y + 54, 16, 16).build();
         this.addRenderableWidget(button);
         //全部取出按钮
         button = Button.builder(
                 Component.literal("↓"),
                 btn -> onConfirm("byTakeAll")
-        ).bounds(x + 146, y + 34, 22, 18).build();
+        ).bounds(x + 208, y + 54, 16, 16).build();
         this.addRenderableWidget(button);
-        //存入按钮
-        button = Button.builder(
-                Component.literal("↑"),
-                btn -> saveAll()
-        ).bounds(x + 120, y + 34, 22, 18).build();
-        this.addRenderableWidget(button);
+    }
+
+    private void changeMode() {
+        System.out.println("changeMode()之前：" + menu.getBagMode());
+        ModNetwork.CHANNEL.sendToServer(new ModeChangePacket());
     }
 
     private void onConfirm(String resource) {
@@ -274,18 +304,36 @@ public class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
             }
         }
 
-
         // 范围校验，防止作弊
         if (amount < 0) amount = 0;
         if (amount > 1_000_000) amount = 1_000_000;
         // 发给服务端
         ModNetwork.CHANNEL.sendToServer(new StorageActionPacket(amount));
 
-        this.countInput.setValue("");
+    }
+    private void save() {
+        if(Screen.hasShiftDown()) {
+            saveAll();
+        }else{
+            ModNetwork.CHANNEL.sendToServer(new StoreOnePacket());
+        }
     }
     private void saveAll() {
         ModNetwork.CHANNEL.sendToServer(new StoreAllPacket());
     }
 
+    /**
+     * 直接给输入框数字修改掉
+     * @param count 要修改的数字
+     */
+    private void setCountInput(int count) {
+        if(Screen.hasShiftDown()) {
+            count /= 2;
+        }
+        this.countInput.setValue(Integer.toString(count));
+    }
+    private void clearCountInput() {
+        this.countInput.setValue("");
+    }
 
 }

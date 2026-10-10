@@ -19,23 +19,28 @@ import java.util.function.Supplier;
 public class StorageSyncPacket {
     private final String kindName;
     private final Map<Item, Integer> data;
+    private final String mode;
 
-    public StorageSyncPacket(String kindName, Map<Item, Integer> data) {
+    public StorageSyncPacket(String kindName, Map<Item, Integer> data,String mode) {
         this.kindName = kindName;
         this.data = data;
+        this.mode = mode;
     }
 
     public static void encode(StorageSyncPacket msg, FriendlyByteBuf buf) {
         buf.writeUtf(msg.kindName);
+        buf.writeUtf(msg.mode);
         buf.writeVarInt(msg.data.size());
         for (Map.Entry<Item, Integer> e : msg.data.entrySet()) {
             buf.writeUtf(BuiltInRegistries.ITEM.getKey(e.getKey()).toString());
             buf.writeVarInt(e.getValue());
         }
+
     }
 
     public static StorageSyncPacket decode(FriendlyByteBuf buf) {
         String kindName = buf.readUtf();
+        String mode = buf.readUtf();
         int size = buf.readVarInt();
         Map<Item, Integer> data = new LinkedHashMap<>();
         for (int i = 0; i < size; i++) {
@@ -44,7 +49,7 @@ public class StorageSyncPacket {
             Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(key));
             data.put(item, count);
         }
-        return new StorageSyncPacket(kindName, data);
+        return new StorageSyncPacket(kindName, data, mode);
     }
 
     public static void handle(StorageSyncPacket msg, Supplier<NetworkEvent.Context> ctx) {
@@ -53,7 +58,7 @@ public class StorageSyncPacket {
             // 客户端收到，更新当前打开的菜单
             if (Minecraft.getInstance().player != null
                     && Minecraft.getInstance().player.containerMenu instanceof StorageBagMenu menu) {
-                menu.updateStorageFromServer(msg.kindName, msg.data);
+                menu.updateStorageFromServer(msg.kindName, msg.data, msg.mode);
             }
         });
         context.setPacketHandled(true);

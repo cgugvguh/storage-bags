@@ -43,17 +43,24 @@ public class ExpandPlugin extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack plugin = player.getItemInHand(hand);
         ItemStack bag = player.getOffhandItem();
-
-        if (!level.isClientSide() && bag.getItem() instanceof StorageBag) {
-            if (StorageUtil.setMaxStorageByMultiplier(bag, this.multiplier)) {//修改背包最大数量, 如果成功
-                if (!player.getAbilities().instabuild) {
-                    plugin.shrink(1);//数量 -1
-                }
-                return InteractionResultHolder.sidedSuccess(plugin, false);//返回交互成功
+        if(!(bag.getItem() instanceof StorageBag)){
+            return super.use(level, player, hand);
+        }
+        if (level.isClientSide()){
+            if(StorageUtil.canSetMaxStorageByMultiplier(bag, multiplier)){
+                return InteractionResultHolder.sidedSuccess(plugin, true);
+            }else {
+                return InteractionResultHolder.fail(plugin);
             }
         }
+        if (StorageUtil.setMaxStorageByMultiplier(bag, this.multiplier)) {//修改背包最大数量, 如果成功
+            if (!player.getAbilities().instabuild) {
+                plugin.shrink(1);//数量 -1
+            }
+            return InteractionResultHolder.sidedSuccess(plugin, false);//返回交互成功
+        }
 
-        return super.use(level, player, hand);
+        return InteractionResultHolder.fail(plugin);
     }
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {

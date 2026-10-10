@@ -78,5 +78,12 @@ public class Storage {
         }
         return max;
     }
+    public int getMinCount(){
+        int min = 0;
+        for (int num : storageInfo.values()) {
+            if (num < min) min = num;
+        }
+        return min;
+    }
 
 }

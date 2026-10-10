@@ -38,6 +38,8 @@ public class StorageBagMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Level level;
     private final Storage storage;
+    private String bagMode;
+
 
     /** 当前选中的按钮索引，同步到客户端 */
     private final DataSlot selectedItemIndex = DataSlot.standalone();
@@ -67,6 +69,7 @@ public class StorageBagMenu extends AbstractContainerMenu {
         this.bagStack = bagStack;
 
         this.lockedSlot = USE_ROW_SLOT_START + inv.selected;
+        this.bagMode = StorageUtil.getOrCreateBagMode(bagStack);
 
         // 玩家主背包 3×9
         for (int i = 0; i < 3; i++) {
@@ -89,9 +92,12 @@ public class StorageBagMenu extends AbstractContainerMenu {
         this.access = ContainerLevelAccess.NULL;
         this.level = inv.player.level();
 
+
         // 从包读 Kind 和数据
         String kindName = buf.readUtf();
+        this.bagMode = buf.readUtf();
         this.storage = new Storage(kindName);
+
 
         int size = buf.readVarInt();
         for (int i = 0; i < size; i++) {
@@ -105,11 +111,11 @@ public class StorageBagMenu extends AbstractContainerMenu {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                this.addSlot(new Slot(inv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(inv, j + i * 9 + 9, 35 + j * 18, 84 + i * 18));
             }
         }
         for (int k = 0; k < 9; k++) {
-            this.addSlot(new Slot(inv, k, 8 + k * 18, 142));
+            this.addSlot(new Slot(inv, k, 35 + k * 18, 142));
         }
 
         this.addDataSlot(this.selectedItemIndex);
@@ -136,6 +142,10 @@ public class StorageBagMenu extends AbstractContainerMenu {
         this.slotUpdateListener = listener;
     }
 
+    public String getBagMode() {
+        return bagMode;
+    }
+
     // ================= 按钮点击 =================
     @Override
     public boolean clickMenuButton(Player player, int index) {
@@ -158,6 +168,10 @@ public class StorageBagMenu extends AbstractContainerMenu {
 
         ItemStack itemStack = slot.getItem();//获取槽位修改前的物品
         ItemStack result = itemStack.copy();//并复制一份
+        if(StorageUtil.getKindName(bagStack).equals("custom")
+                && !storage.getStorageInfo().containsKey(itemStack.getItem())){//不含有此类物品并且是自定义储物袋
+            StorageUtil.addKind(bagStack, itemStack);
+        }
         int stored = StorageUtil.tryStoreToStorage(bagStack, itemStack);//尝试存入
 
         if (stored <= 0) return ItemStack.EMPTY;//如果没存进去, 返回空物品堆表示没成功
@@ -207,7 +221,7 @@ public class StorageBagMenu extends AbstractContainerMenu {
         if (selected < 0 || selected >= getStorageNum()) return;//如果超出范围, 不处理
 
         List<Item> items = new ArrayList<>(storage.getStorageInfo().keySet());
-        Item item = items.get(selected);//获取被选中物品的数量
+        Item item = items.get(selected);//获取被选中物品
 
         // 示例：取出 amount 个
         int took = tryTakeFromStorage(item, amount, player);//尝试取出
@@ -258,9 +272,10 @@ public class StorageBagMenu extends AbstractContainerMenu {
         return toTake;
     }
     // StorageBagMenu
-    public void updateStorageFromServer(String kindName, Map<Item, Integer> data) {
+    public void updateStorageFromServer(String kindName, Map<Item, Integer> data, String mode) {
         // 保留原有物品列表结构，只更新数量
         Map<Item, Integer> map = this.storage.getStorageInfo();
+        this.bagMode = mode;
         for (Map.Entry<Item, Integer> e : data.entrySet()) {
             map.put(e.getKey(), e.getValue());
         }
@@ -268,7 +283,7 @@ public class StorageBagMenu extends AbstractContainerMenu {
     }
     private void syncToClient(ServerPlayer player) {
         ModNetwork.CHANNEL.sendTo(
-                new StorageSyncPacket(storage.getKindName(), storage.getStorageInfo()),
+                new StorageSyncPacket(storage.getKindName(), storage.getStorageInfo(), bagMode),
                 player.connection.connection,
                 NetworkDirection.PLAY_TO_CLIENT
         );
@@ -279,7 +294,23 @@ public class StorageBagMenu extends AbstractContainerMenu {
         this.storage.getStorageInfo().putAll(newData);
         if (slotUpdateListener != null) slotUpdateListener.run();
     }
+    public void storeOneFromInventory(ServerPlayer pPlayer) {
+        // 从 storage 取出 amount 个当前选中的物品
+        int selected = getSelectedItemIndex();//获取选中物品索引
+        if (selected < 0 || selected >= getStorageNum()) return;//如果超出范围, 不处理
+        List<Item> items = new ArrayList<>(storage.getStorageInfo().keySet());
+        Item item = items.get(selected);//获取被选中物品
+        ItemStack bagStack = this.bagStack;
+        if (bagStack == null || bagStack.isEmpty()) return;
+        if (StorageUtil.storeOneFromInventory(bagStack,item, pPlayer)) {
 
+            // 同步给客户端
+            syncToClient(pPlayer);
+
+            this.broadcastChanges();
+            if (slotUpdateListener != null) slotUpdateListener.run();
+        }
+    }
     public void storeAllFromInventory(ServerPlayer pPlayer) {
         ItemStack bagStack = this.bagStack;
         if (bagStack == null || bagStack.isEmpty()) return;
@@ -292,5 +323,10 @@ public class StorageBagMenu extends AbstractContainerMenu {
             if (slotUpdateListener != null) slotUpdateListener.run();
         }
     }
+    public void changeBagMode(ServerPlayer pPlayer) {
+        this.bagMode = StorageUtil.changeBagMode(bagStack);
+        syncToClient(pPlayer);
+    }
+
 
 }

@@ -35,18 +35,26 @@ public class FillPlugin extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack plugin = player.getItemInHand(hand);
-        ItemStack bag = player.getOffhandItem();
-
-        if (!level.isClientSide() && bag.getItem() instanceof StorageBag) {
-            if (StorageUtil.fill(bag, multiplier)) {//修改背包最大数量, 如果成功
-                if (!player.getAbilities().instabuild) {
-                    plugin.shrink(1);//数量 -1
-                }
-                return InteractionResultHolder.sidedSuccess(plugin, false);//返回交互成功
+        ItemStack bagStack = player.getOffhandItem();
+        if(!(bagStack.getItem() instanceof StorageBag)){
+            return super.use(level, player, hand);
+        }
+        if (level.isClientSide){
+            if(StorageUtil.canFill(bagStack)){
+                return InteractionResultHolder.sidedSuccess(plugin, true);//客户端提前返回
             }
+            return InteractionResultHolder.fail(plugin);
         }
 
-        return super.use(level, player, hand);
+        if (StorageUtil.fillByMultiplier(bagStack, multiplier)) {//修改背包最大数量, 如果成功
+            if (!player.getAbilities().instabuild) {
+                plugin.shrink(1);//数量 -1
+            }
+            return InteractionResultHolder.sidedSuccess(plugin, false);//返回交互成功
+        }
+        return InteractionResultHolder.fail(plugin);
+
+
     }
 
     @Override

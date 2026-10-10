@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author 宛
@@ -52,91 +53,7 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
     public Kinds getKind() {
         return this.kind;
     }
-    /*@Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 
-        ItemStack bagStack = pPlayer.getItemInHand(pHand);//获取该储物袋
-        Storage storage = StorageUtil.getStorage(bagStack);
-
-        if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {
-            // 只允许主手打开
-            if (pHand != InteractionHand.MAIN_HAND) {//如果是在副手
-                ItemStack itemStack = pPlayer.getMainHandItem();//获取主手物品
-
-                if(storage.isAllowed(itemStack.getItem())){//如果包含了主手物品
-                    int stored = StorageUtil.tryStoreToStorage(bagStack,itemStack);
-                    if (stored <= 0) itemStack = ItemStack.EMPTY;
-                    itemStack.shrink(stored);
-                    return InteractionResultHolder.success(bagStack);
-                }
-                if(storage.getKindName().equals("custom")){
-                    if(itemStack.isEmpty()){
-                        storage.getStorageInfo().entrySet().removeIf((entry) -> entry.getValue() <= 0);
-                        return InteractionResultHolder.success(bagStack);
-                    }
-                    if(itemStack.getItem() instanceof ExpandPlugin expandPlugin){//如果是储物袋
-                        if (StorageUtil.setMaxStorage(bagStack, expandPlugin.getMultiplier())) {//修改背包最大数量, 如果成功
-                            if (!pPlayer.getAbilities().instabuild) {
-                                itemStack.shrink(1);//数量 -1
-                                return InteractionResultHolder.sidedSuccess(itemStack, false);//返回交互成功
-                            }
-                        }
-                    }else if(itemStack.getItem() instanceof FillPlugin fillPlugin){
-                        if (StorageUtil.fill(bagStack, fillPlugin.getMultiplier())) {//修改背包最大数量, 如果成功
-                            if (!pPlayer.getAbilities().instabuild) {
-                                itemStack.shrink(1);//数量 -1
-                                return InteractionResultHolder.sidedSuccess(itemStack, false);//返回交互成功
-                            }
-                        }
-                    }
-                    if(itemStack.getMaxStackSize() == 1){//只允许存入最大堆叠数量为 1 的物品
-                        return InteractionResultHolder.fail(bagStack);
-                    }
-                    int maxNum = Math.max((StorageUtil.getMaxStorage(bagStack) / 64) * 27, 27);//增加种类最小值 27
-                    maxNum = Math.min(maxNum, 100);// 增加种类最大值 100
-                    int size = StorageUtil.getStorage(bagStack).getStorageInfo().size();//当前尺寸
-                    if(size >= maxNum){//如果大于最大尺寸
-                        return InteractionResultHolder.fail(bagStack);
-                    }else {
-                        storage.addStorageKind(itemStack.getItem());//增加此类物品
-                        int stored = StorageUtil.tryStoreToStorage(bagStack,itemStack);//放入
-                        if (stored <= 0) itemStack = ItemStack.EMPTY;
-                        itemStack.shrink(stored);
-                        StorageUtil.saveToNbt(bagStack, storage);
-                        return InteractionResultHolder.success(bagStack);
-                    }
-
-                }
-                return InteractionResultHolder.pass(pPlayer.getItemInHand(pHand));
-            }
-
-            String menuName = "container." + storage.getKindName() + "_storage_bag";
-
-            NetworkHooks.openScreen(
-                    serverPlayer,
-                    new SimpleMenuProvider(
-                            (id, inv, player) -> new StorageBagMenu(
-                                    id, inv, ContainerLevelAccess.NULL, storage, bagStack
-                            ),
-                            bagStack.hasCustomHoverName()
-                                    ? bagStack.getHoverName()
-                                    : Component.translatable(menuName)
-                    ),
-                    (FriendlyByteBuf buf) -> {
-                        buf.writeUtf(storage.getKindName());
-                        buf.writeVarInt(storage.getStorageInfo().size());
-                        for (Map.Entry<Item, Integer> e : storage.getStorageInfo().entrySet()) {
-                            buf.writeUtf(BuiltInRegistries.ITEM.getKey(e.getKey()).toString());
-                            buf.writeVarInt(e.getValue());
-                        }
-                    }
-            );
-
-            pPlayer.awardStat(ModStats.USE_STORAGE_BAG.get());
-        }
-
-        return InteractionResultHolder.sidedSuccess(bagStack, pLevel.isClientSide);
-    }*/
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
@@ -168,40 +85,19 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
 
                 if (storage.getKindName().equals("custom")) {//自定义储物袋
                     if (itemStack.isEmpty()) {//空手
-                        storage.getStorageInfo().entrySet().removeIf(entry -> entry.getValue() <= 0);//移去无物品的种类信息
+                        //移去无物品的种类信息
+                        storage.getStorageInfo().entrySet().removeIf(entry -> entry.getValue() <= 0);
                         return InteractionResultHolder.success(bagStack);
-                    }
-
-                    if (itemStack.getItem() instanceof ExpandPlugin expandPlugin) {//如果是插件走插件逻辑
-                        if (StorageUtil.setMaxStorage(bagStack, expandPlugin.getMultiplier())) {
-                            if (!pPlayer.getAbilities().instabuild) {
-                                itemStack.shrink(1);
-                                return InteractionResultHolder.sidedSuccess(itemStack, false);   // 插件使用成功
-                            }
-                        }
-                        // 失败或创造模式 → 继续往下
-                    } else if (itemStack.getItem() instanceof FillPlugin fillPlugin) {
-                        if (StorageUtil.fill(bagStack, fillPlugin.getMultiplier())) {
-                            if (!pPlayer.getAbilities().instabuild) {
-                                itemStack.shrink(1);
-                                return InteractionResultHolder.sidedSuccess(itemStack, false);
-                            }
-                        }
-                        // 失败或创造模式 → 继续往下
                     }
 
                     if (itemStack.getMaxStackSize() == 1) {
                         return InteractionResultHolder.fail(bagStack);
                     }
                     //设置自定义储物袋上下限
-                    int maxNum = Math.max((StorageUtil.getMaxStorage(bagStack) / 64) * 27, 27);
-                    maxNum = Math.min(maxNum, 100);
-                    int size = StorageUtil.getStorage(bagStack).getStorageInfo().size();
-                    if (size >= maxNum) {//超上限返回
+                    if(!StorageUtil.addKind(bagStack, itemStack)) {
                         return InteractionResultHolder.fail(bagStack);
                     }
 
-                    storage.addStorageKind(itemStack.getItem());//不超添加种类
                     if(pPlayer.isCrouching()){//如果蹲着直接存入
                         int stored = StorageUtil.tryStoreToStorage(bagStack, itemStack);
                         if (stored <= 0) return InteractionResultHolder.fail(bagStack);
@@ -216,7 +112,7 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
 
             // ==================== 主手：打开菜单 ====================
             String menuName = "container." + storage.getKindName() + "_storage_bag";//菜单名
-
+            StorageUtil.getOrCreateBagMode(bagStack);
             NetworkHooks.openScreen(
                     serverPlayer,
                     new SimpleMenuProvider(
@@ -229,6 +125,7 @@ public class StorageBag extends Item {//负责物品交互逻辑, 只保留储�
                     ),
                     (FriendlyByteBuf buf) -> {
                         buf.writeUtf(storage.getKindName());
+                        buf.writeUtf(StorageUtil.getOrCreateBagMode(bagStack));
                         buf.writeVarInt(storage.getStorageInfo().size());
                         for (Map.Entry<Item, Integer> e : storage.getStorageInfo().entrySet()) {
                             buf.writeUtf(BuiltInRegistries.ITEM.getKey(e.getKey()).toString());

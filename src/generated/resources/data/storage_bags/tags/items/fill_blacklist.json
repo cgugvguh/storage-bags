@@ -36,6 +36,7 @@
     "minecraft:emerald_block",
     "minecraft:lapis_block",
     "minecraft:redstone_block",
-    "minecraft:netherite_block"
+    "minecraft:netherite_block",
+    "#storage_bags:plugin"
   ]
 }
